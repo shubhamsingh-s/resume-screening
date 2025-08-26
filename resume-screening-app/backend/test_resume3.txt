@@ -1,0 +1,6 @@
+
+            DevOps Engineer
+            Skills: AWS, Docker, Kubernetes, CI/CD, Linux, Python
+            Experience: 4 years
+            Education: Bachelor's in IT
+            

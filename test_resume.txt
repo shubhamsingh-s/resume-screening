@@ -1,0 +1,14 @@
+
+    John Doe
+    Software Developer
+    
+    Experience:
+    - 5+ years of experience in Python development
+    - Strong knowledge of React and JavaScript
+    - Experience with machine learning and data analysis
+    - Worked on cloud platforms like AWS and Azure
+    
+    Skills: Python, React, JavaScript, Machine Learning, AWS, Azure, SQL
+    
+    Education: Bachelor's in Computer Science
+    

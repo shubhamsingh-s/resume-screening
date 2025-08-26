@@ -1,7 +1,9 @@
-import React, { useState } from 'react'
-import { Search, MapPin, DollarSign, Briefcase } from 'lucide-react'
+import React, { useState } from 'react';
+import { useAuth } from '../contexts/AuthContext';
+import { Search, MapPin, DollarSign } from 'lucide-react'
 
 const JobRecommendations: React.FC = () => {
+  const { user } = useAuth();
   const [searching, setSearching] = useState(false)
   const [recommendations, setRecommendations] = useState<any[]>([])
 

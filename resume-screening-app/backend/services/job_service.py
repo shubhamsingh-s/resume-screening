@@ -3,30 +3,38 @@ import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 import spacy
+import os
+import sys
+
+# Add the data directory to the path
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'data'))
+from job_dataset import JOB_DATASET, SKILLS_DATABASE, get_job_by_title, get_skills_for_job
 
 class JobService:
     def __init__(self):
         self.nlp = spacy.load("en_core_web_sm")
-        self.skills_keywords = [
-            'python', 'java', 'javascript', 'react', 'angular', 'vue', 'node.js', 'express',
-            'django', 'flask', 'spring', 'spring boot', 'mongodb', 'mysql', 'postgresql',
-            'sql', 'nosql', 'aws', 'azure', 'gcp', 'docker', 'kubernetes', 'jenkins',
-            'git', 'github', 'gitlab', 'ci/cd', 'machine learning', 'deep learning',
-            'artificial intelligence', 'data science', 'data analysis', 'pandas', 'numpy',
-            'scikit-learn', 'tensorflow', 'pytorch', 'nlp', 'computer vision', 'rest api',
-            'graphql', 'microservices', 'agile', 'scrum', 'kanban', 'linux', 'unix',
-            'html', 'css', 'sass', 'less', 'typescript', 'redux', 'vuex', 'next.js',
-            'nuxt.js', 'gatsby', 'tailwind', 'bootstrap', 'material-ui', 'ant design'
-        ]
+        self.skills_keywords = [skill.lower() for skill in SKILLS_DATABASE]
         
     def extract_skills(self, job_description):
-        """Extract skills from job description"""
+        """Extract skills from job description using enhanced matching"""
         text_lower = job_description.lower()
         found_skills = []
         
-        for skill in self.skills_keywords:
-            if skill.lower() in text_lower:
-                found_skills.append(skill.title())
+        # First, check if this matches any predefined job description
+        for job_key, job_data in JOB_DATASET.items():
+            job_desc_lower = job_data['description'].lower()
+            # Simple similarity check - if significant overlap, use predefined skills
+            common_words = set(text_lower.split()) & set(job_desc_lower.split())
+            if len(common_words) > 10:  # Threshold for similarity
+                found_skills.extend(job_data['required_skills'])
+                break
+        
+        # If no predefined job matched, use keyword extraction
+        if not found_skills:
+            for skill in self.skills_keywords:
+                # Use regex for better matching (whole word matching)
+                if re.search(r'\b' + re.escape(skill) + r'\b', text_lower):
+                    found_skills.append(skill.title())
         
         # Remove duplicates and sort
         return sorted(list(set(found_skills)))

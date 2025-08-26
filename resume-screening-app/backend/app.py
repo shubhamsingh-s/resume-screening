@@ -3,6 +3,7 @@ from flask_cors import CORS
 import os
 from werkzeug.utils import secure_filename
 from services.resume_service import ResumeService
+from services.ml_model_service import ml_model_service
 from services.job_service import JobService
 from services.gemini_service import GeminiService
 
@@ -32,7 +33,22 @@ def allowed_file(filename):
 def index():
     return redirect(url_for('login'))
 
-# Remove login route
+# Login route
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        
+        print(f"Attempting to log in with username: {username}")
+        # For now, we'll just simulate a successful login
+        if username and password:  # Replace with actual validation
+            session['username'] = username
+            return redirect(url_for('home'))
+        
+        return render_template('login.html', error='Invalid credentials')
+    
+    return render_template('login.html')
 
 # Home route - dashboard
 @app.route('/home')
@@ -161,9 +177,9 @@ def match_resume_job():
         file.save(filepath)
         
         try:
-            # Extract skills from resume
-            resume_analysis = resume_service.analyze_resume(filepath)
-            resume_skills = resume_analysis.get('skills', [])
+            # Extract skills from resume using ML model service
+            resume_text = resume_service.extract_text(filepath)
+            resume_skills = ml_model_service.extract_skills_ml(resume_text)
             
             # Extract skills from job description
             job_skills = job_service.extract_skills(job_description)
@@ -174,8 +190,8 @@ def match_resume_job():
             if not job_skills:
                 return jsonify({'error': 'No skills found in job description'}), 400
             
-            # Calculate match score
-            match_score = job_service.calculate_job_match(resume_skills, job_skills)
+            # Calculate match score using ML model service
+            match_score = ml_model_service.calculate_skill_match_score(resume_skills, job_skills)
             
             # Find matched and missing skills
             resume_skills_set = set(skill.lower() for skill in resume_skills)
@@ -196,6 +212,38 @@ def match_resume_job():
             return jsonify({'error': str(e)}), 500
     
     return jsonify({'error': 'Invalid file type'}), 400
+
+@app.route('/batch_analyze_resumes', methods=['POST'])
+def batch_analyze_resumes():
+    """Analyze multiple resumes and return results for all"""
+    if 'files' not in request.files:
+        return jsonify({'error': 'No files provided'}), 400
+    
+    files = request.files.getlist('files')
+    if not files or all(file.filename == '' for file in files):
+        return jsonify({'error': 'No files selected'}), 400
+    
+    valid_files = []
+    for file in files:
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(filepath)
+            valid_files.append(filepath)
+    
+    if not valid_files:
+        return jsonify({'error': 'No valid files provided'}), 400
+    
+    try:
+        # Use the batch analysis method from resume service
+        results = resume_service.batch_analyze_resumes(valid_files)
+        return jsonify({
+            'total_resumes': len(valid_files),
+            'results': results,
+            'status': 'success'
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/api/health')
 def health_check():

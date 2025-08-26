@@ -1,0 +1,6 @@
+
+            Data Scientist
+            Skills: Python, Machine Learning, SQL, TensorFlow, Data Analysis
+            Experience: 3 years
+            Education: Master's in Data Science
+            

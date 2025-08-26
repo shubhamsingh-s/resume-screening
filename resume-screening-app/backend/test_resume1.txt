@@ -1,0 +1,6 @@
+
+            Software Developer
+            Skills: Python, JavaScript, React, Node.js, AWS
+            Experience: 5 years
+            Education: Bachelor's in Computer Science
+            

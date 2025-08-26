@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Screening - Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <h1 class="text-xl font-semibold">Resume Screening System</h1>
+                </div>
+                <div class="flex items-center">
+                    <a href="/logout" class="text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium">
+                        Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <div class="px-4 py-6 sm:px-0">
+            <div class="border-4 border-dashed border-gray-200 rounded-lg p-8">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4">Welcome to the Resume Screening Dashboard</h2>
+                <p class="text-gray-600 mb-6">This is the backend dashboard. The main application is served by the React frontend.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <h3 class="text-lg font-semibold mb-2">API Status</h3>
+                        <p class="text-green-600">✓ Backend API is running</p>
+                        <p class="text-sm text-gray-600 mt-2">All endpoints are accessible</p>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <h3 class="text-lg font-semibold mb-2">Frontend</h3>
+                        <p class="text-blue-600">React frontend available at:</p>
+                        <p class="text-sm text-gray-600 mt-2">http://localhost:5173</p>
+                    </div>
+                </div>
+                
+                <div class="mt-8">
+                    <h3 class="text-lg font-semibold mb-4">Available API Endpoints:</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><code class="bg-gray-100 px-2 py-1 rounded">POST /api/upload-resume</code> - Upload and analyze resume</li>
+                        <li><code class="bg-gray-100 px-2 py-1 rounded">POST /api/extract-skills</code> - Extract skills from job description</li>
+                        <li><code class="bg-gray-100 px-2 py-1 rounded">POST /api/recommend-jobs</code> - Get job recommendations</li>
+                        <li><code class="bg-gray-100 px-2 py-1 rounded">GET /api/health</code> - Health check endpoint</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
